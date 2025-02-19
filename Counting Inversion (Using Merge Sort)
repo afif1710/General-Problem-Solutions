@@ -1,0 +1,98 @@
+#include<bits/stdc++.h>
+#include <numeric>
+
+
+
+
+
+
+int merge(vector<int> &vc, int left, int mid, int right){
+
+    int n1 = mid-left+1;
+    int n2 = right-mid;
+
+    int L[n1];
+    int R[n2];
+
+    int k = left;
+
+    for(int i = 0; i<n1; i++){
+        L[i] = vc[k];
+        k++;
+    }
+    for(int i = 0; i<n2; i++){
+        R[i] = vc[k];
+        k++;
+    }
+
+    k = left;
+    int i = 0, j = 0;
+    int cnt = 0;
+    while(i<n1 && j<n2){
+        if(L[i] <= R[j]){
+            vc[k] = L[i];
+            i++;
+        }else{
+            vc[k] = R[j];
+            j++;
+            cnt += (n1 - i);  
+        }
+        k++;
+    }
+
+    while(i<n1){
+        vc[k] = L[i];
+        i++;
+        k++;
+  
+    }
+    while(j<n2){
+        vc[k] = R[j];
+        j++;
+        k++;
+    }
+    return cnt;
+
+}
+
+
+
+int mergesort(vector<int> &vc, int l,  int r){
+    if(l >= r){
+        return 0; // Base case: No inversions in a single-element array
+    }  
+    
+    int mid = l + (r - l) / 2;
+    
+    int a = mergesort(vc, l, mid);       // Count inversions in left half
+    int b = mergesort(vc, mid + 1, r);   // Count inversions in right half
+    int c = merge(vc, l, mid, r);        // Count split inversions
+    
+    return (a + b + c);  // Return the total inversion count
+}
+
+
+int main() {
+  
+    
+    int t;
+    cin>>t;
+    while(t--){
+        
+        int n;
+        cin>>n;
+        vector<int> vc(n);
+        for(int i = 0 ; i<n ; i++){
+            cin>>vc[i];
+        }
+        int ans = mergesort(vc, 0, n-1);
+
+        cout<<"Total count of inversions: "<<ans;
+        if(t>0){
+            cout<<endl;
+        }
+
+        
+    }
+
+}
