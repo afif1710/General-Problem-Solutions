@@ -1,0 +1,35 @@
+class Solution {
+  public:
+    
+    void DFS(unordered_map<int, vector<int>> &mp, int u, vector<bool> &visited, vector<int> &result){
+        if(visited[u] == true){
+            return;
+        }
+        visited[u] = true;
+        result.push_back(u);
+        for(auto &v: mp[u]){
+            if(visited[v] == false){
+                DFS(mp, v, visited, result);
+            }
+        }
+    }
+    vector<int> dfs(vector<vector<int>>& adj) {
+        // Code here
+        int V = adj.size(); //Vertices wasn't given, hence we needed to manually find it out.
+
+        unordered_map<int, vector<int>> mp;    // To better understand, we've used map which maps each vertex to its' corresponding adjacency list
+        
+        for(int u = 0; u<V; u++){
+            for(auto v = adj[u].begin(); v!=adj[u].end(); v++){
+                mp[u].push_back(*v);
+            }
+        }
+        vector<int>result;
+        
+        vector<bool> visited(V, false);
+        
+        DFS(mp, 0, visited, result);
+        return result;
+        
+    }
+};
