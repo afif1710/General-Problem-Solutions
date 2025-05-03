@@ -1,0 +1,46 @@
+class Solution {
+  public:
+    bool isCycleBFS(vector<vector<int>>& adj, int u, vector<bool> &visited){
+        queue<pair<int, int>> qu;
+        qu.push({u, -1});
+        visited[u] = true;
+        
+        while(!qu.empty()){
+            pair<int, int> tmp = qu.front();
+            qu.pop();
+            
+            int child = tmp.first;
+            int parent = tmp.second;
+            
+            for(int &v: adj[child]){
+                if(!visited[v]){
+                    visited[v] = true;
+                    qu.push({v, child});
+                }else if(v != parent){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    bool isCycle(int V, vector<vector<int>>& edges) {
+        // Code here
+        
+        // Convert edge list to adjacency list
+        vector<vector<int>> adj(V);
+        for(auto &edge : edges){
+            int u = edge[0], v = edge[1];
+            adj[u].push_back(v);
+            adj[v].push_back(u); // since it's undirected
+        }
+        
+        vector<bool> visited(V, false);
+        
+        for(int i = 0; i<V; i++){
+            if(!visited[i] && isCycleBFS(adj, i, visited)){
+                return true;
+            }
+        }
+        return false;
+    }
+};
