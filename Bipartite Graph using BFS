@@ -1,0 +1,49 @@
+class Solution {
+  public:
+    queue<int> qu;
+    bool BFS(unordered_map<int, vector<int>>& adj, vector<int>& color, int node, int currColor){
+        
+        qu.push(node);
+        color[node] = currColor;
+        
+        while(!qu.empty()){
+            int u = qu.front();
+            qu.pop();
+            for(auto &v: adj[u]){
+                if(color[v] == color[u]){
+                    return false;
+                }
+                if(color[v] == -1){
+                    int new_color = 1-color[u];    // Has to be color[u], not currColor
+                    color[v] = new_color;
+                    qu.push(v);
+                }
+            }
+        }
+        return true;
+    }
+    bool isBipartite(int V, vector<vector<int>> &edges) {
+        // Code here
+        unordered_map<int, vector<int>> adj;
+        
+        for(auto &edge: edges){
+            int a = edge[0];
+            int b = edge[1];
+            
+            adj[a].push_back(b);
+            adj[b].push_back(a);
+        }
+        int currColor = 0;
+        vector<int> color(V, -1);   // No Nodes are colored at start
+        for(int i = 0; i < V; i++){
+            if(color[i] == -1){
+                if(BFS(adj, color, i, currColor) == false){
+                    return false;
+                }
+            }
+        }
+        return true;
+        
+        
+    }
+};
