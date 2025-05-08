@@ -1,0 +1,46 @@
+class Solution {
+  public:
+    bool DFS(unordered_map<int, vector<int>>& adj, vector<int>& color, int node, int currColor){
+        color[node] = currColor;
+        
+        for(auto &adj_node: adj[node]){
+            if(color[adj_node] == color[node]){
+                return false;
+            }
+            
+            if(color[adj_node] == -1){
+                int new_color = 1 - color[node];      // If current color  = 0 then new color  = 1 and vice versa
+                if(DFS(adj, color, adj_node, new_color) == false){
+                    return false;
+                }
+            }
+            
+            
+        }
+        return true;
+    }
+    bool isBipartite(int V, vector<vector<int>> &edges) {
+        // Code here
+        unordered_map<int, vector<int>> adj;
+        
+        for(auto &edge: edges){
+            int a = edge[0];
+            int b = edge[1];
+            
+            adj[a].push_back(b);
+            adj[b].push_back(a);
+        }
+        int currColor = 0;
+        vector<int> color(V, -1);   // No Nodes are colored at start
+        for(int i = 0; i < V; i++){
+            if(color[i] == -1){
+                if(DFS(adj, color, i, currColor) == false){
+                    return false;
+                }
+            }
+        }
+        return true;
+        
+        
+    }
+};
