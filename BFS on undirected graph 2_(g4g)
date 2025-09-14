@@ -1,0 +1,41 @@
+class Solution {
+  public:
+  
+    void solve(unordered_map<int, vector<int>> &adj, vector<bool> &visited, int u, vector<int> &res){
+        queue<int> qu;
+        qu.push(u);
+        visited[u] = true;
+        res.push_back(u);
+        while(!qu.empty()){
+            int u = qu.front();
+            qu.pop();
+            for(auto &v: adj[u]){
+                if(!visited[v]){
+                   qu.push(v);
+                   visited[v] = true;
+                   res.push_back(v); 
+                }
+                
+            }
+            
+        }
+        
+    }
+    // Function to return Breadth First Traversal of given graph.
+    vector<int> bfs(vector<vector<int>> &mp) {
+        // Code here
+        int n = mp.size();
+        unordered_map<int, vector<int>> adj;
+        for(int i = 0; i<n; i++){
+            for(int j = 0; j < mp[i].size(); j++){
+                adj[i].push_back(mp[i][j]);
+            }
+        }
+        
+        vector<int> res;
+        vector<bool> visited(n, false);      //Not specifying n and false gives segmentation fault, runtime error
+        solve(adj, visited, 0, res);
+        return res;
+        
+    }
+};
