@@ -1,0 +1,40 @@
+// User function Template for C++
+
+class Solution {
+  public:
+    //Bellman-Ford Algorithm
+    
+    vector<int> bellmanFord(int V, vector<vector<int>>& edges, int src) {
+        // Code here
+        int int_max = 1e8;
+        vector<int> dist(V, int_max);
+        dist[src] = 0;
+        for(int i = 0 ; i < V-1; i++){      //loop V-1 times and update each distance from the source
+            for(auto &edge: edges){
+                int u = edge[0];
+                int v = edge[1];
+                int w = edge[2];
+                
+                if(dist[u] != int_max && dist[u] + w < dist[v]){
+                    dist[v] = dist[u] + w;
+                }
+                
+            }
+        }
+        //Check if graph has negative cycle
+        int x = 1;
+        while(x--){         //Loop once more; if Graph has -ve cycle then it'll update , hence return {-1}
+            for(auto &edge: edges){
+                int u = edge[0];
+                int v = edge[1];
+                int w = edge[2];
+                
+                if(dist[u] != int_max && dist[u] + w < dist[v]){
+                    return {-1};
+                }
+                
+            }
+        }
+        return dist;        //If not -ve cycle, then return the dist array.
+    }
+};
