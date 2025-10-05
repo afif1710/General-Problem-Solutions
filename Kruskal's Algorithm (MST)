@@ -57,24 +57,17 @@ class Solution {
         for(int i = 0; i < V; i++){
             parent[i] = i;
         }
-        priority_queue<P, vector<P>, greater<P>> pq;
-     
-        unordered_map<int, vector<P>> adj;  //Converting edges into adjacency list
-        for(auto &edge: edges){
+        
+        vector<vector<int>> vec_2d;
+        
+        for(auto &edge: edges){     //Converting edges into a 2D vector to make it sorted based on weights
             int u = edge[0];
             int v = edge[1];
             int wt = edge[2];
-            adj[u].push_back({v, wt});
-            adj[v].push_back({u, wt});
+      
+            vec_2d.push_back({u, v, wt});
         }
-        vector<vector<int>> vec_2d;
-        for(int u = 0 ; u<V; u++){  //Making a 2d vector from adjacency list
-            for(auto &vec: adj[u]){
-                int v = vec.first;
-                int wt = vec.second;
-                vec_2d.push_back({u, v, wt});
-            }
-        }
+        
         auto comparator = [&](vector<int> &vec1, vector<int> &vec2){
             return vec1[2] < vec2[2];   //Sorting the vector based on weights
         };
