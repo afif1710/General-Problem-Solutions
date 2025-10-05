@@ -1,0 +1,91 @@
+class Solution {
+  public:
+    // Total Time complexity : O(E log E)
+    // Total Space complexity : O(V + E) ; Adjacency list
+    typedef pair<int, int> P;
+    vector<int> parent;
+    vector<int> rank;
+    
+    int find(int x){
+        if(x == parent[x]){
+            return x;
+        }
+        return parent[x] = find(parent[x]);
+    }        //DSU find()
+    
+    void Union(int x, int y){   
+        int x_par = find(x);
+        int y_par = find(y);
+        
+        if(x_par == y_par){
+            return;
+        }
+        if(rank[x_par] > rank[y_par]){
+            parent[y_par] = x_par;
+        }else if(rank[x_par] < rank[y_par]){
+            parent[x_par] = y_par;
+        }else{
+            parent[y_par] = x_par;
+            rank[x_par]++;
+        }
+    } //DSU union()
+    
+    int kruskal(vector<vector<int>> &vec){      //Kruskal's Algorithm
+        int sum = 0;
+        
+        for(auto &tmp: vec){    //Iterating into each vector inside the 2D vector
+            int u = tmp[0];
+            int v = tmp[1];
+            int w = tmp[2];
+            
+            int par_u = find(u);
+            int par_v = find(v);
+            //If 2 nodes do not have same parents then Union them and make one parent(connect them)
+            if(par_u != par_v){
+                Union(par_u, par_v);
+                sum+=w; //Sum adds lowest weights only bcoz we used comparator to sort the vector based on small weights
+            }
+            //We do nothing if they share the same parent. 
+        }
+        return sum;
+    }
+    
+    int spanningTree(int V, vector<vector<int>>& edges) {
+        // code here
+        parent.resize(V);
+        rank.resize(V, 0);
+        for(int i = 0; i < V; i++){
+            parent[i] = i;
+        }
+        priority_queue<P, vector<P>, greater<P>> pq;
+     
+        unordered_map<int, vector<P>> adj;  //Converting edges into adjacency list
+        for(auto &edge: edges){
+            int u = edge[0];
+            int v = edge[1];
+            int wt = edge[2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        vector<vector<int>> vec_2d;
+        for(int u = 0 ; u<V; u++){  //Making a 2d vector from adjacency list
+            for(auto &vec: adj[u]){
+                int v = vec.first;
+                int wt = vec.second;
+                vec_2d.push_back({u, v, wt});
+            }
+        }
+        auto comparator = [&](vector<int> &vec1, vector<int> &vec2){
+            return vec1[2] < vec2[2];   //Sorting the vector based on weights
+        };
+        sort(vec_2d.begin(), vec_2d.end(), comparator);
+        
+        return kruskal(vec_2d);
+    }
+};
+
+
+
+
+
+
