@@ -1,5 +1,7 @@
 class Solution {
   //Minimum Spanning Tree, Prim's Algorithm
+  //Total time complexity : O(E log V), Because (log E ≈ log V² = 2 log V). n sparse graphs E ≤ V²
+  //Space complexity :O(V + E)
   public:
     typedef pair<int, int> P;
     int spanningTree(int V, vector<vector<int>>& edges) {
@@ -36,8 +38,7 @@ class Solution {
                 }
             }
         }
-        //Total time complexity : O(E log V), Because (log E ≈ log V² = 2 log V). n sparse graphs E ≤ V²
-        //Space complexity :O(V + E)
+        
         return sum;
         
     }
