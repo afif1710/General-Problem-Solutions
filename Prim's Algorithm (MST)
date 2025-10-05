@@ -1,0 +1,44 @@
+class Solution {
+  //Minimum Spanning Tree, Prim's Algorithm
+  public:
+    typedef pair<int, int> P;
+    int spanningTree(int V, vector<vector<int>>& edges) {
+        // code here
+        priority_queue<P, vector<P>, greater<P>> pq;
+        int sum = 0;
+        unordered_map<int, vector<P>> adj;  //Converting edges into adjacency list
+        for(auto &edge: edges){
+            int u = edge[0];
+            int v = edge[1];
+            int wt = edge[2];
+            adj[u].push_back({v, wt});
+            adj[v].push_back({u, wt});
+        }
+        
+        vector<bool> visited(V, false);
+        pq.push({0, 0});
+        
+        while(!pq.empty()){     //O(E), since Each edge can be pushed into the priority queue at most once.
+            auto p = pq.top();
+            int wt = p.first;
+            int node = p.second;
+            pq.pop();               //Each push/pop operation costs O(log E) (since PQ is a binary heap).
+            if(visited[node] == true){
+                continue;
+            }
+            sum += wt;
+            visited[node] = true;
+            for(auto &vec: adj[node]){
+                int adjNode = vec.first;
+                int weight = vec.second;
+                if(visited[adjNode] == false){
+                    pq.push({weight, adjNode}); //Each push/pop operation costs O(log E) (since PQ is a binary heap).
+                }
+            }
+        }
+        //Total time complexity : O(E log V), Because (log E ≈ log V² = 2 log V). n sparse graphs E ≤ V²
+        //Space complexity :O(V + E)
+        return sum;
+        
+    }
+};
