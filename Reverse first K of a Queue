@@ -1,0 +1,30 @@
+class Solution {
+  public:
+    queue<int> reverseFirstK(queue<int> q, int k) {
+        // code here
+        
+        int n = q.size();
+        int rem = n - k;
+        stack<int> st;
+        
+        
+        if(k <= n){
+            while(k--){
+                st.push(q.front());
+                q.pop();
+            }
+            while(!st.empty()){     //Stack bcoz we stack's top element will give us reverese order
+                q.push(st.top());
+                st.pop();
+            }
+            while(rem--){
+                q.push(q.front());  //Push remaining elements from the front to the back of the queue
+                q.pop();
+            }
+            return q;
+        }        
+        
+        return q;               //if k > n , return original queue
+
+    }
+};
