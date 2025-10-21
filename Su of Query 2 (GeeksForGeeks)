@@ -1,0 +1,44 @@
+
+class Solution {
+  public:
+    // Building segment Tree function
+    void buildSegTree(int i, int l, int r, int arr[], vector<int> &segTree){
+        if(l == r){
+            segTree[i] = arr[l];
+            return;
+        }
+        int mid = l+(r-l)/2;
+        buildSegTree(2*i+1, l, mid, arr, segTree);
+        buildSegTree(2*i+2, mid+1, r, arr, segTree);
+        
+        segTree[i] = segTree[2*i+1] + segTree[2*i+2];
+        
+    }
+    // Query in the actual array with given index
+    int query(int i, int l, int r, int start, int end, vector<int> &segTree){
+        if(start > r || end < l){
+            return 0;       //If query does not overlap wanted Nodes
+        }
+        if(l >= start && r <= end){
+            return segTree[i];      // If query range is between the proper range
+        }
+        // Else
+        int mid = l + (r-l)/2;  
+        return query(2*i+1, l, mid, start, end, segTree)+
+                query(2*i+2, mid+1, r, start, end, segTree);
+    }
+    vector<int> querySum(int n, int arr[], int q, int queries[]) {
+        // code here
+        vector<int>segTree(4*n);
+        buildSegTree(0, 0, n-1, arr, segTree);
+        
+        vector<int> res;
+        for(int i = 0; i<2*q; i+=2){
+            int startidx = queries[i] - 1;
+            int endidx   = queries[i+1] - 1;
+            
+            res.push_back(query(0, 0, n-1, startidx, endidx, segTree));
+        }
+        return res;
+    }
+};
